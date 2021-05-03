@@ -36,27 +36,19 @@ def respond(msg):
 def callback_inline(call):
     try:
         if call.message:
-            wnow = WeatherParser.get_weather_for_now("Moscow")
-            temp = wnow.temperature("celsius")["temp"]
-            temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
             if call.data == 'wnow':
-                markup = types.InlineKeyboardMarkup(row_width = 2)
-                yes = types.InlineKeyboardButton("Yes", callback_data="yes")
-                no = types.InlineKeyboardButton("No", callback_data="no")
-                markup.add(yes, no)
+                wnow = WeatherParser.get_weather_for_now("Moscow")
+                temp = wnow.temperature("celsius")["temp"]
+                temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
+                wind_speed = wnow.wind()["speed"]
 
-                bot.send_message(call.message.chat.id, f"Now in <b>Moscow</b> <i>{wnow.detailed_status}</i> and temperature is <b>{temperature}</b> celsius. Wanna see more info?", parse_mode="html", reply_markup=markup)
+                bot.send_message(call.message.chat.id, f"Now in <b>Moscow</b> <i>{wnow.detailed_status}</i> and temperature is <b>{temperature}</b> celsius. Speed of wind is <b>{wind_speed} m/s</b>, humidity is <b>{wnow.humidity}%</b>, clouds are <b>{wnow.clouds}</b>", parse_mode="html")
             elif call.data == "wtoday":
                 pass
             elif call.data == "wtomorrow":
                 pass
             elif call.data == "wweek":
                 pass
-            elif call.data == "yes":
-                wind_speed = wnow.wind()["speed"]
-                bot.send_message(call.message.chat.id, f"Now in <b>Moscow</b> <i>{wnow.detailed_status}</i> and temperature is <b>{temperature}</b> celsius. Speed of wind is <b>{wind_speed} m/s</b>, humidity is <b>{wnow.humidity}%</b>, clouds are <b>{wnow.clouds}</b>", parse_mode="html")
-            elif call.data == "no":
-                bot.send_message(call.message.chat.id, f"Now in <b>Moscow</b> <i>{wnow.detailed_status}</i> and temperature is <b>{temperature}</b> celsius.", parse_mode="html")
     except Exception as e:
         print(repr(e))
 
