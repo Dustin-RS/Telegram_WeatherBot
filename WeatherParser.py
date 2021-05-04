@@ -37,13 +37,33 @@ def parser_helper(item, wdat, CITY):
     temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
     humidity = wtomorrow["main"]["humidity"]
     desc = wtomorrow["weather"][0]["description"]
+    emoj_desc = ''
     clouds = wtomorrow["clouds"]["all"]
     wind_speed = wtomorrow["wind"]["speed"]
     time = str(item["dt_txt"].split(' ')[1])
     time = time[:-3]
     wdat = wdat.replace('-', '/')
 
-    tmp = f"On {wdat} at {time}" + f" in <b>{CITY}</b> <i>{desc}</i> " + f"and temperature is <b>{temperature}</b> celsius." + f" Speed of wind is <b>{wind_speed} m/s</b>, " + f"humidity is <b>{humidity}%</b>, " + f"clouds are <b>{clouds}</b>\n"
+    if desc == "clear sky":
+        emoj_desc = '🔵'
+    elif desc.find("clouds") != -1:
+        emoji_desc = '☁️'
+    elif desc.find("rain") != -1:
+        emoji_desc = '🌦️'
+    elif desc.find("thunderstorm") != -1:
+        emoji_desc = '🌩️'
+    elif desc.find("snow") != -1:
+        emoji_desc = '❄️'
+    elif (desc == "mist" or desc == "Smoke" 
+        or desc == "Haze" or desc == "fog"
+        or desc == "sand" or desc == "dust"):
+        emoji_desc = '🌫️'
+    tmp = f"On <b><i>{wdat}</i></b> at <b>{time}</b>"
+    tmp += f" in <b>{CITY}</b>:\n<i>{emoji_desc}{desc}</i>.\n" 
+    tmp += f"🌡️Temperature is <b>{temperature}</b> celsius.\n"
+    tmp += f"💨Speed of wind is <b>{wind_speed} m/s</b>.\n"
+    tmp += f"💦Humidity is <b>{humidity}%</b>.\n"
+    tmp += f"☁️Clouds are <b>{clouds}</b>.\n"
     return tmp
 def gettime_from_datetime(temp_time):
     """
