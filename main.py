@@ -33,7 +33,7 @@ def greetings(msg):
                      reply_markup=markup)
 
 
-@bot.message_handler(content_types=["text"])
+@bot.message_handler(content_types=["text"])  # If user activated one of the options or typed smth. 
 def respond(msg):
     """
     Method which give response to previous command.
