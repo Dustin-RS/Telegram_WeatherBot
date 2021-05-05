@@ -15,25 +15,45 @@ def get_weather_for_now(city):
     """
     Take current weather.
     """
-    observation = mgr.weather_at_place(city)
+    observation = mgr.weather_at_place(city) # Get the current wether in the city.
     wnow = observation.weather
     return wnow
 def get_weather_for_tomorrow(city):
     """
     Take weather forecast for next 5 days, including today.
     """
-    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={Constants.WEATHER_TOKEN}"
-    r = requests.get(url)
-    data = json.loads(r.text)
-    tenki_nextday = data["list"]
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={Constants.WEATHER_TOKEN}" # json file link on future forecast.
+    r = requests.get(url) # Get the json file.
+    data = json.loads(r.text) # Load it.
+    tenki_nextday = data["list"] # Get the whole data list.
     return tenki_nextday
+def get_desc_emoji(desc):
+    """
+    Set appropriate emoji to weather description.
+    """
+    emoji_desc = ''
+    if desc == "clear sky":
+        emoji_desc = '🔵' # Blue sky emoji.
+    elif desc.find("clouds") != -1:
+        emoji_desc = '☁️' # Cloud emoji.
+    elif desc.find("rain") != -1:
+        emoji_desc = '🌦️' # Rain cloud emoji.
+    elif desc.find("thunderstorm") != -1:
+        emoji_desc = '🌩️' # Thunderstorm cloud emoji.
+    elif desc.find("snow") != -1:
+        emoji_desc = '❄️' # Snow emoji.
+    elif (desc == "mist" or desc == "Smoke" 
+        or desc == "Haze" or desc == "fog"
+        or desc == "sand" or desc == "dust"):
+        emoji_desc = '🌫️' # Fog cloud emoji.
+    return emoji_desc
 def parser_helper(item, wdat, CITY):
     """
     Takes all necessary info from json file and make it more beautiful.
     """
     wtomorrow = item
-    temp = wtomorrow["main"]["temp"] - Constants.FROM_KELVIN_TO_CELSIUS
-    temp = round(temp,2)
+    temp = wtomorrow["main"]["temp"] - Constants.FROM_KELVIN_TO_CELSIUS # On json file temperature was set by kelvin. By this action we change it to celsius.
+    temp = round(temp,2) # Round float value to two digits after point.
     temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
     humidity = wtomorrow["main"]["humidity"]
     desc = wtomorrow["weather"][0]["description"]
@@ -43,21 +63,8 @@ def parser_helper(item, wdat, CITY):
     time = str(item["dt_txt"].split(' ')[1])
     time = time[:-3]
     wdat = wdat.replace('-', '/')
+    emoji_desc = get_desc_emoji(desc)
 
-    if desc == "clear sky":
-        emoj_desc = '🔵'
-    elif desc.find("clouds") != -1:
-        emoji_desc = '☁️'
-    elif desc.find("rain") != -1:
-        emoji_desc = '🌦️'
-    elif desc.find("thunderstorm") != -1:
-        emoji_desc = '🌩️'
-    elif desc.find("snow") != -1:
-        emoji_desc = '❄️'
-    elif (desc == "mist" or desc == "Smoke" 
-        or desc == "Haze" or desc == "fog"
-        or desc == "sand" or desc == "dust"):
-        emoji_desc = '🌫️'
     tmp = f"On <b><i>{wdat}</i></b> at <b>{time}</b>"
     tmp += f" in <b>{CITY}</b>:\n<i>{emoji_desc}{desc}</i>.\n" 
     tmp += f"🌡️Temperature is <b>{temperature}</b> celsius.\n"

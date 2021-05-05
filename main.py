@@ -22,7 +22,7 @@ def greetings(msg):
     else:
         Constants.CITY = db.get_user_city(msg.from_user.id) # If the user already exists, take he's city.
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True) # Buttons on user's messagebox.
-    weather = types.KeyboardButton("☁️Weather")
+    weather = types.KeyboardButton("☁️Weather") 
     city = types.KeyboardButton("🏠Change home city")
     markup.add(weather, city) # Add buttons to markup
 
@@ -37,9 +37,9 @@ def respond(msg):
     Method which give response to previous command.
     Now, it prints inline telegram buttons with different types of choise.
     """
-    if msg.chat.type == "private":
+    if msg.chat.type == "private": # if the chat is personal(option in telegram).
         if msg.text == "☁️Weather":
-            Constants.CITY = db.get_user_city(msg.from_user.id)
+            Constants.CITY = db.get_user_city(msg.from_user.id) # Changing home city to value in database.
 
             markup = types.InlineKeyboardMarkup(row_width = 4) # Buttons under previous message.
             weather_now = types.InlineKeyboardButton("Now", callback_data="wnow")
@@ -55,9 +55,9 @@ def respond(msg):
             Constants.CHG_CITY = True # Option 'Change home city' was chosen.
         else:
             if Constants.CHG_CITY == True:
-                Constants.CITY = msg.text
+                Constants.CITY = msg.text # Set to the city value new one from user's message text.
                 Constants.CITY = Constants.CITY.replace('-',' ') # Remove dashes, because pyowm can't work with them.
-                db.update_user(msg.from_user.id, Constants.CITY)
+                db.update_user(msg.from_user.id, Constants.CITY) # Update user's home city.
 
                 bot.send_message(msg.chat.id, f"City was changed successfully! Now it is: <b>{Constants.CITY}</b>", parse_mode="html")
                 Constants.CHG_CITY = False # Option 'Change home city' was executed.
@@ -72,27 +72,32 @@ def callback_inline(call):
     try:
         if call.message:
             if call.data == 'wnow':
-                wnow = WeatherParser.get_weather_for_now(Constants.CITY)
-                temp = wnow.temperature("celsius")["temp"]
-                temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
-                wind_speed = wnow.wind()["speed"]
 
-                bot.send_message(call.message.chat.id, f"Now in <b>{Constants.CITY}</b> <i>{wnow.detailed_status}</i> " + 
-                f"and temperature is <b>{temperature}</b> celsius." + 
-                f" Speed of wind is <b>{wind_speed} m/s</b>, " + 
-                f"humidity is <b>{wnow.humidity}%</b>, " + 
-                f"clouds are <b>{wnow.clouds}</b>", parse_mode="html")
+                wnow = WeatherParser.get_weather_for_now(Constants.CITY) # Get the current weather.
+                temp = wnow.temperature("celsius")["temp"] # Get the temperature from json file format.
+                temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp) # Make temperature a string with symbols '+' or '-'
+                wind_speed = wnow.wind()["speed"] 
+                desc = wnow.detailed_status # Description of the weather outside, e.g.: rain.
+                emoji_desc = WeatherParser.get_desc_emoji(desc) # Emoji of the description.
+
+                bot.send_message(call.message.chat.id, 
+                f"Now in <b>{Constants.CITY}</b>:\n<i>{emoji_desc}{desc}</i>.\n" + 
+                f"🌡️Temperature is <b>{temperature}</b> celsius.\n" + 
+                f"💨Speed of wind is <b>{wind_speed} m/s</b>.\n" + 
+                f"💦Humidity is <b>{wnow.humidity}%</b>.\n" + 
+                f"☁️Clouds are <b>{wnow.clouds}</b>.\n", 
+                parse_mode="html")
             elif call.data == "wtoday" or call.data == "wtomorrow" or call.data == "wweek":
-                dat = date.today()
-                dat_tomorrow = dat + datetime.timedelta(days=1)
+                dat = date.today() # Take today date.
+                dat_tomorrow = dat + datetime.timedelta(days=1) # Take tomorrow's date from today's date.
                 dat = str(dat)
                 dat_tomorrow = str(dat_tomorrow)
-                now = datetime.datetime.now()
-                weat_msg = ""
-                wtomorrow_daily = WeatherParser.get_weather_for_tomorrow(Constants.CITY)
+                now = datetime.datetime.now() # Take current date and time.
+                weat_msg = "" # Weather message. What will be printed in the end.
+                wtomorrow_daily = WeatherParser.get_weather_for_tomorrow(Constants.CITY) # Take the data of the weather for future 5 days.
                 for item in wtomorrow_daily:
-                    wdat = str(item["dt_txt"].split(' ')[0])
-                    weather_time = WeatherParser.gettime_from_datetime(item["dt_txt"])
+                    wdat = str(item["dt_txt"].split(' ')[0]) # Take the date from datetime.
+                    weather_time = WeatherParser.gettime_from_datetime(item["dt_txt"]) # Take time from datetime.
                     
                     if call.data == "wtoday" and wdat != dat:
                         continue
