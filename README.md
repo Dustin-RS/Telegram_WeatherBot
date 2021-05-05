@@ -32,6 +32,7 @@ cd Telegram_WeatherBot
 git checkout dev
 pip install pyTelegramBotAPI
 pip install requests
+python main.py
 ```
 ## Contributing
 If you are a collaborator it means that you could make any changes.
