@@ -3,6 +3,9 @@ import WeatherParser
 
 
 class TestWeatherParserMethods(unittest.TestCase):
+    """
+    Class for unit testing WeatherParser methods.
+    """
     def test_get_desc_emoji_1(self):
         self.assertEqual(WeatherParser.get_desc_emoji("overcast clouds"), '☁️')
 
