@@ -7,6 +7,9 @@ class TestWeatherParserMethods(unittest.TestCase):
     Class for unit testing WeatherParser methods.
     """
     def test_get_desc_emoji_1(self):
+        """
+        Test for converting string to emojis.
+        """
         self.assertEqual(WeatherParser.get_desc_emoji("overcast clouds"), '☁️')
 
     def test_get_desc_emoji_2(self):
