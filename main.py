@@ -9,7 +9,7 @@ bot = telebot.TeleBot(Constants.BOT_TOKEN)  # Initialise telegram bot.
 db = DataBaseHelper("db.db")  # Connect to database.
 
 
-@bot.message_handler(commands=["start"])  # If the start command was activated.
+@bot.message_handler(commands=["start", "help"])  # If the start command was activated.
 def greetings(msg):
     """
     Method which is tell what should bot do after command start.
