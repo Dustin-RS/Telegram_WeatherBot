@@ -43,7 +43,7 @@ def get_desc_emoji(desc):
         emoji_desc = '🌩️'  # Thunderstorm cloud emoji.
     elif desc.find("snow") != -1:
         emoji_desc = '❄️'  # Snow emoji.
-    elif (desc == "mist" or desc == "Smoke" 
+    elif (desc == "mist" or desc == "Smoke"
           or desc == "Haze" or desc == "fog"
           or desc == "sand" or desc == "dust"):
         emoji_desc = '🌫️'  # Fog cloud emoji.

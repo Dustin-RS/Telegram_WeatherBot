@@ -29,7 +29,7 @@ def greetings(msg):
     bot.send_message(msg.chat.id, f"Welcome, <i>{msg.from_user.first_name}</i>!\n" +
                                   f"My name is <b>{bot.get_me().first_name}</b> and my purpose to show "
                                   f"the weather forecast.", parse_mode="html")
-    bot.send_message(msg.chat.id, f"For future work with this telegram bot, please choose an option", parse_mode="html",
+    bot.send_message(msg.chat.id, "For future work with this telegram bot, please choose an option", parse_mode="html",
                      reply_markup=markup)
 
 
