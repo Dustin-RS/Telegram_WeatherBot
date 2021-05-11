@@ -1,7 +1,7 @@
 import json
 import pyowm
-import requests
 import datetime
+import requests
 import Constants
 OWM = pyowm.OWM(Constants.WEATHER_TOKEN)  # Create OpenWeatherMap object.
 mgr = OWM.weather_manager()  # Create manager for working with owm object.
