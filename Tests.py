@@ -19,6 +19,9 @@ class TestWeatherParserMethods(unittest.TestCase):
         self.assertEqual(WeatherParser.get_desc_emoji("heavy snow"), '❄️')
 
     def test_gettime_from_datetime(self):
+        """
+        Test for take time from datetime type.
+        """
         self.assertEqual(WeatherParser.gettime_from_datetime("2001-08-20 00:12:15"), "00:12:15")
 
 
