@@ -22,7 +22,7 @@ def greetings(msg):
     else:
         Constants.CITY = db.get_user_city(msg.from_user.id)  # If the user already exists, take he's city.
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)  # Buttons on user's messagebox.
-    weather = types.KeyboardButton("☁️Weather") 
+    weather = types.KeyboardButton("☁️Weather")
     city = types.KeyboardButton("🏠Change home city")
     markup.add(weather, city)  # Add buttons to markup
 
@@ -33,7 +33,7 @@ def greetings(msg):
                      reply_markup=markup)
 
 
-@bot.message_handler(content_types=["text"])  # If user activated one of the options or typed smth. 
+@bot.message_handler(content_types=["text"])  # If user activated one of the options or typed smth.
 def respond(msg):
     """
     Method which give response to previous command.
@@ -51,7 +51,7 @@ def respond(msg):
             markup.add(weather_now, weather_today, weather_tomorrow, weather_week)  # Add buttons to markup
 
             bot.send_message(msg.chat.id, "Choose the period", reply_markup=markup)
-        elif msg.text == "🏠Change home city":  
+        elif msg.text == "🏠Change home city":
             Constants.CITY = db.get_user_city(msg.from_user.id)  # Take user's city from database.
             bot.send_message(msg.chat.id, f"Enter the city you want to know the weather for. "
                                           f"Now it is: <b>{Constants.CITY}</b>", parse_mode="html")
@@ -82,11 +82,11 @@ def callback_inline(call):
                 temp = wnow.temperature("celsius")["temp"]  # Get the temperature from json file format.
                 temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)  # Make temperature a
                 # string with symbols '+' or '-'
-                wind_speed = wnow.wind()["speed"] 
+                wind_speed = wnow.wind()["speed"]
                 desc = wnow.detailed_status  # Description of the weather outside, e.g.: rain.
                 emoji_desc = WeatherParser.get_desc_emoji(desc)  # Emoji of the description.
 
-                bot.send_message(call.message.chat.id, 
+                bot.send_message(call.message.chat.id,
                                  f"Now in <b>{Constants.CITY}</b>:\n<i>{emoji_desc}{desc}</i>.\n" +
                                  f"🌡️Temperature is <b>{temperature}</b> celsius.\n" +
                                  f"💨Speed of wind is <b>{wind_speed} m/s</b>.\n" +
@@ -105,7 +105,7 @@ def callback_inline(call):
                 for item in wtomorrow_daily:
                     wdat = str(item["dt_txt"].split(' ')[0])  # Take the date from datetime.
                     weather_time = WeatherParser.gettime_from_datetime(item["dt_txt"])  # Take time from datetime.
-                    
+
                     if call.data == "wtoday" and wdat != dat:
                         continue
                     if call.data == "wtomorrow" and wdat != dat_tomorrow:
@@ -117,9 +117,10 @@ def callback_inline(call):
                         or weather_time == WeatherParser.gettime_from_datetime(now.replace(hour=21, minute=0, second=0,
                                                                                            microsecond=0))):
                         weat_msg += WeatherParser.parser_helper(item, wdat, Constants.CITY)
-                    
+
                 bot.send_message(call.message.chat.id, weat_msg, parse_mode="html")
     except Exception as e:
         print(repr(e))
+
 
 bot.polling(none_stop=True)  # Launch bot.
