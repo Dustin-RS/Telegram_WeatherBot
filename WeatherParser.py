@@ -1,6 +1,6 @@
 import json
-import pyowm
 import datetime
+import pyowm
 import requests
 import Constants
 OWM = pyowm.OWM(Constants.WEATHER_TOKEN)  # Create OpenWeatherMap object.
