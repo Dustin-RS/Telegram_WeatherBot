@@ -52,7 +52,8 @@ def get_desc_emoji(desc):
 
 def parser_helper(item, wdat, city):
     """
-    Takes all necessary info from json file and make it more beautiful.
+    Takes statistic info from item, such as: temperature, humidity, clouds, etc.
+    Make union string for statistics with all info from item.
     """
     wtomorrow = item
     # On json file temperature was set by kelvin. By this action we change it to celsius.
