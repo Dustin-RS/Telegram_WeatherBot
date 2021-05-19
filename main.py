@@ -1,3 +1,4 @@
+import os
 import telebot
 import datetime
 import Constants
@@ -5,7 +6,7 @@ from telebot import types
 from datetime import date as dt
 from DataBaseHelper import DataBaseHelper
 import WeatherParser
-bot = telebot.TeleBot(Constants.BOT_TOKEN)  # Initialise telegram bot.
+bot = telebot.TeleBot(os.environ["BOT_TOKEN"])  # Initialise telegram bot.
 db = DataBaseHelper("db.db")  # Connect to database.
 
 
