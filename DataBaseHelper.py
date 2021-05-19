@@ -44,6 +44,6 @@ class DataBaseHelper:
 
     def close(self):
         """
-        Closing conntection with database.
+        Closing connection with database.
         """
         self.connection.close()

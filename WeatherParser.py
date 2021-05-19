@@ -12,8 +12,8 @@ def get_weather_for_now(city):
     Take current weather.
     """
     observation = mgr.weather_at_place(city)  # Get the current weather in the city.
-    wnow = observation.weather
-    return wnow
+    weather_for_now = observation.weather
+    return weather_for_now
 
 
 def get_weather_for_tomorrow(city):
@@ -50,26 +50,26 @@ def get_desc_emoji(desc):
     return emoji_desc
 
 
-def parser_helper(item, wdat, city):
+def parser_helper(item, weather_date, city):
     """
     Takes statistic info from item, such as: temperature, humidity, clouds, etc.
     Make union string for statistics with all info from item.
     """
-    wtomorrow = item
+    weather_for_tomorrow = item
     # On json file temperature was set by kelvin. By this action we change it to celsius.
-    temp = wtomorrow["main"]["temp"] - Constants.FROM_KELVIN_TO_CELSIUS
+    temp = weather_for_tomorrow["main"]["temp"] - Constants.FROM_KELVIN_TO_CELSIUS
     temp = round(temp, 2)  # Round float value to two digits after point.
     temperature = "+" + str(temp) if temp >= 0 else "-" + str(temp)
-    humidity = wtomorrow["main"]["humidity"]
-    desc = wtomorrow["weather"][0]["description"]
-    clouds = wtomorrow["clouds"]["all"]
-    wind_speed = wtomorrow["wind"]["speed"]
+    humidity = weather_for_tomorrow["main"]["humidity"]
+    desc = weather_for_tomorrow["weather"][0]["description"]
+    clouds = weather_for_tomorrow["clouds"]["all"]
+    wind_speed = weather_for_tomorrow["wind"]["speed"]
     time = str(item["dt_txt"].split(' ')[1])
     time = time[:-3]
-    wdat = wdat.replace('-', '/')
+    weather_date = weather_date.replace('-', '/')
     emoji_desc = get_desc_emoji(desc)
 
-    tmp = f"On <b><i>{wdat}</i></b> at <b>{time}</b>"
+    tmp = f"On <b><i>{weather_date}</i></b> at <b>{time}</b>"
     tmp += f" in <b>{city}</b>:\n<i>{emoji_desc}{desc}</i>.\n"
     tmp += f"🌡️Temperature is <b>{temperature}</b> celsius.\n"
     tmp += f"💨Speed of wind is <b>{wind_speed} m/s</b>.\n"
